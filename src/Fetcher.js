@@ -13,9 +13,9 @@ class Fetcher extends React.Component {
         timeout: PropTypes.number.isRequired,
         _debug: PropTypes.bool.isRequired,
 
-        loaded_component: PropTypes.element,
-        timed_out_component: PropTypes.element,
-        errored_out_component: PropTypes.element,
+        loading: PropTypes.element,
+        timed_out: PropTypes.element,
+        errored_out: PropTypes.element,
         _simulate_lag: PropTypes.number,
     }
 
@@ -98,16 +98,13 @@ class Fetcher extends React.Component {
         this.props._debug && console.log('FetchOne: render', 'fetched:', this.state.fetched)
 
         if (this.state.has_error)
-            return (React.createElement(this.props.errored_out_component, {error:this.state.error}) || null)
+            return this.props.errored_out ? React.createElement(this.props.errored_out, {error:this.state.error}) : null
         if (this.state.timed_out)
-            return (React.createElement(this.props.timed_out_component) || null)
+            return this.props.timed_out ? React.createElement(this.props.timed_out) : null
         if (!this.state.fetched)
-            return (React.createElement(this.props.loaded_component) || null)
-
+            return this.props.loading ?  React.createElement(this.props.loading) : null
         return ( 
-            <div className='fetcher-wrapper'>
-                { React.createElement(this.props.component, {data:this.state.data}) }
-            </div>
+            React.createElement(this.props.component, {data:this.state.data}) 
         )
     }
 }

@@ -114,7 +114,7 @@ endif
 # big phonies
 ###############################################################################
 
-.PHONY: all clean clean_dist vendor_size install
+.PHONY: all clean clean_dist vendor_size install docs
 # make the vendor and target bundles
 all: $(COMPRESS_FILES_GZ) 
 
@@ -144,6 +144,11 @@ install:
 dist:
 	$(ROLLUP) lib/$(MAIN_ENTRY) -n $(MODULE_NAME) -f umd -o $(PUBLISH_DIR)/index.js -c .rollup.config.js 
 	npm publish
+
+docs:
+	rm -fr docs
+	cp -R public docs
+	cp src/App.js docs/
 	
 ###############################################################################
 # rules

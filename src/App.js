@@ -1,16 +1,14 @@
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types'
 
-import FetchOne from './FetchOne'
-//import Location from './Location'
+import Fetcher from './Fetcher'
 
 const Item = (props) => {return(
-    <li>{props.name}</li>
+    <li>{props.i}</li>
 )}
 Item.propTypes = {
-        name: PropTypes.string.isRequired,
+        i: PropTypes.number.isRequired,
 }
 
 const FetchData = (props) => {return(
@@ -18,7 +16,7 @@ const FetchData = (props) => {return(
         <h3>loaded .... :)</h3>
         <ul>
             { props.data.map(item => {
-                item.key=item.id; 
+                item.key=item.i; 
                 return React.createElement(Item, item)}
             )}
         </ul>
@@ -39,11 +37,14 @@ const FetchTimedOut = () => {return(
     </div>
 )}
 
-const FetchError = () => {return(
+const FetchError = (props) => {return(
     <div>
-        <h3>Error :(</h3>
+        <h3>Error {props.error.status} :(</h3>
     </div>
 )}
+FetchError.propTypes = { 
+    error: PropTypes.string.isRequired,
+}
 
 const FetchTest = (props) => {return(
     <div 
@@ -63,38 +64,50 @@ FetchTest.propTypes = {
     children: PropTypes.array.isRequired, 
 }
 
+const host = 'https://postgrest-test.chessindex.org'
+const href = host + '/testing?limit=5'
+const bad_href = host + '/not_exist'
+
 export default class App extends React.Component {
   render() { return (
+
       <div className='fetch-page'>
           <h2><a href='/App.js'>app source</a></h2>
           <FetchTest title='normal'>
-                <FetchOne 
+                <Fetcher
                     component={FetchData} 
-                    href='https://api.chessindex.org/v_opening_name_agg?limit=10'
+                    href={href}
                     timeout={3000}
-                    loaded_component={FetchLoad}
-                    timed_out_component={FetchTimedOut}
-                    errored_out_component={FetchError}
+                    loading={FetchLoad}
+                    timed_out={FetchTimedOut}
+                    errored_out={FetchError}
                 />
           </FetchTest>
           <FetchTest title='bad url'>
-                <FetchOne 
+                <Fetcher
                     component={FetchData} 
-                    href='https://chessindex.org/v_opening_name_agg?limit=10'
-                    loaded_component={FetchLoad}
-                    timed_out_component={FetchTimedOut}
-                    errored_out_component={FetchError}
+                    href={bad_href}
+                    loading={FetchLoad}
+                    timed_out={FetchTimedOut}
+                    errored_out={FetchError}
                 />
           </FetchTest>
           <FetchTest title='time out in 3 secs'>
-                <FetchOne 
+                <Fetcher
                     component={FetchData} 
-                    href='https://api.chessindex.org/v_opening_name_agg?limit=10'
+                    href={href}
                     timeout={3000}
-                    loaded_component={FetchLoad}
-                    timed_out_component={FetchTimedOut}
-                    errored_out_component={FetchError}
+                    loading={FetchLoad}
+                    timed_out={FetchTimedOut}
+                    errored_out={FetchError}
                     _simulate_lag={10000}
+                />
+           </FetchTest>
+           <FetchTest title='empty optional components'>
+                <Fetcher
+                    component={FetchData} 
+                    href={href}
+                    _simulate_lag={1000}
                 />
            </FetchTest>
         </div>

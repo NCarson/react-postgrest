@@ -1,4 +1,5 @@
 lib
 node_modules
 index.json
+public
 *.swp
