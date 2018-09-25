@@ -72,7 +72,7 @@ export default class App extends React.Component {
   render() { return (
 
       <div className='fetch-page'>
-          <h2><a href='/App.js'>app source</a></h2>
+          <h2><a href='/react-postgrest/App.js'>app source</a></h2>
           <FetchTest title='normal'>
                 <Fetcher
                     component={FetchData} 
