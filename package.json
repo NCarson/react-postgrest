@@ -12,13 +12,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "react": "^16.4.1",
-    "react-dom": "^16.4.1"
+    "fast-deep-equal": "^2.0.1"
+  },
+  "peerDependicies": {
+    "react": ">=16.4.1",
+    "react-dom": ">=16.4.1"
   },
   "devDependencies": {
     "axios": "^0.18.0",
-    "urijs": "^1.19.1",
-    "route-parser": "0.0.5",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-jsx": "^2.0.0",
@@ -26,10 +28,19 @@
     "babel-preset-react": "^6.24.1",
     "babel-runtime": "^6.26.0",
     "browserify-global-shim": "^1.0.3",
-    "eslint": "^5.3.0",
+    "eslint": "^5.6.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-react": "^7.11.1",
-    "rollup-plugin-node-resolve": "^3.4.0"
+    "react": "^16.4.1",
+    "react-demo": "^2.0.0",
+    "react-dom": "^16.4.1",
+    "react-highlight": "^0.12.0",
+    "react-highlighter": "^0.4.3",
+    "react-syntax-highlighter": "^8.0.1",
+    "reactstrap": "^6.4.0",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "route-parser": "0.0.5",
+    "urijs": "^1.19.1"
   },
   "browserify-global-shim": {
     "react": "React",

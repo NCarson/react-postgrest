@@ -1,8 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types'
+import { Card, CardBody, CardTitle} from 'reactstrap';
+//import SyntaxHighlighter from 'react-syntax-highlighter';
+//import { docco } from 'react-syntax-highlighter/styles/hljs';
+import Highlight from 'react-highlight'
 
-import Fetcher from './Fetcher'
+
+import Demo, {props as P} from 'react-demo'
+
+import withFetcher from './withFetcher'
+import PGFetcher from './PostgrestFetcher'
+
 
 const Item = (props) => {return(
     <li>{props.i}</li>
@@ -11,8 +20,117 @@ Item.propTypes = {
         i: PropTypes.number.isRequired,
 }
 
-const FetchData = (props) => {return(
-    <div>
+const FetchSuccess = (props) => {return(
+    <div className='fetch-wrapper'>
+        <h3>loaded .... :)</h3>
+        <ul>
+            { props.data.map(item => {
+                item.key=item.i; 
+                return React.createElement(Item, item)}
+            )}
+        </ul>
+    </div>
+)}
+FetchSuccess.propTypes = { 
+    data: PropTypes.object.isRequired, 
+    response: PropTypes.object.isRequired, 
+}
+
+const FetchLoading = () => {return(
+    <div className='fetch-wrapper'>
+        <h3>loading .... :|</h3>
+    </div>
+)}
+
+const FetchTimedOut = () => {return(
+    <div className='fetch-wrapper'>
+        <h3>data server timed out :/</h3>
+    </div>
+)}
+
+const FetchFailed = (props) => {return(
+    <div className='fetch-wrapper'>
+        <h3>failed! {props.error && props.error.status} :(</h3>
+    </div>
+)}
+FetchFailed.propTypes = { 
+    error: PropTypes.object.isRequired,
+}
+
+const Fetcher = withFetcher(FetchSuccess, FetchLoading, FetchFailed, FetchTimedOut)
+const EmptyFetcher = withFetcher(FetchSuccess)
+const get = new PGFetcher().get
+
+const host = 'https://postgrest-test.chessindex.org'
+const href = host + '/testing?limit=5'
+const bad_href = host + '/not_exist'
+
+
+const DemoFetcher = (props) => {return(
+    <Fetcher
+        get={get}
+        {...props}
+    />
+)}
+
+const DemoEmptyFetcher = (props) => {return(
+    <EmptyFetcher
+        get={get}
+        {...props}
+    />
+)}
+
+
+class MyDemo extends React.Component {
+  constructor(props) {
+    super(props);
+    this.toggle = this.toggle.bind(this);
+    this.state = { collapse: false };
+  }
+
+  toggle() {
+    this.setState({ collapse: !this.state.collapse });
+  }
+
+  render() {
+    return (
+      <div className='mydemo=wrapper'>
+          <Card>
+            <CardBody>
+                <CardTitle>{this.props.title}</CardTitle>
+                <Demo
+                      target={this.props.target}
+                      props={this.props.props}
+                />
+            </CardBody>
+          </Card>
+      </div>
+    );
+  }
+}
+
+const source = `
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import PropTypes from 'prop-types'
+import { Card, CardBody, CardTitle} from 'reactstrap';
+
+import Demo, {props as P} from 'react-demo'
+
+import withFetcher from './withFetcher'
+import PGFetcher from './PostgrestFetcher'
+
+
+const Item = (props) => {return(
+    <li>{props.i}</li>
+)}
+Item.propTypes = {
+        i: PropTypes.number.isRequired,
+}
+
+const FetchSuccess = (props) => {return(
+    <div className='fetch-wrapper'>
         <h3>loaded .... :)</h3>
         <ul>
             { props.data.map(item => {
@@ -23,101 +141,92 @@ const FetchData = (props) => {return(
     </div>
 )}
 
-FetchData.propTypes = { data: PropTypes.object.isRequired, }
+FetchSuccess.propTypes = { data: PropTypes.object.isRequired, }
 
-const FetchLoad = () => {return(
-    <div>
+const FetchLoading = () => {return(
+    <div className='fetch-wrapper'>
         <h3>loading .... :|</h3>
     </div>
 )}
 
 const FetchTimedOut = () => {return(
-    <div>
+    <div className='fetch-wrapper'>
         <h3>data server timed out :/</h3>
     </div>
 )}
 
-const FetchError = (props) => {return(
-    <div>
-        <h3>Error {props.error.status} :(</h3>
+const FetchFailed = (props) => {return(
+    <div className='fetch-wrapper'>
+        <h3>failed! {props.error && props.error.status} :(</h3>
     </div>
 )}
-FetchError.propTypes = { 
-    error: PropTypes.string.isRequired,
+FetchFailed.propTypes = { 
+    error: PropTypes.object.isRequired,
 }
 
-const FetchTest = (props) => {return(
-    <div 
-        className='fetch-test'
-        style={{border: '2px solid blue', padding: '1em', display:'inline-block', margin: '1em', verticalAlign:'top'}}
-    >
-        <h2
-            style={{color: 'blue', padding:'1em'}}
-        >
-            {props.title}
-        </h2>
-        {props.children}
-    </div>
+const Fetcher = withFetcher(FetchSuccess, FetchLoading, FetchFailed, FetchTimedOut)
+const EmptyFetcher = withFetcher(FetchSuccess)
+const get = new PGFetcher().get
+
+const DemoFetcher = (props) => {return(
+    <Fetcher
+        get={get}
+        {...props}
+    />
 )}
-FetchTest.propTypes = { 
-    title: PropTypes.string.isRequired, 
-    children: PropTypes.array.isRequired, 
-}
 
-const host = 'https://postgrest-test.chessindex.org'
-const href = host + '/testing?limit=5'
-const bad_href = host + '/not_exist'
+const DemoEmptyFetcher = (props) => {return(
+    <EmptyFetcher
+        get={get}
+        {...props}
+    />
+)}
+`
 
-export default class App extends React.Component {
-  render() { return (
-
-      <div className='fetch-page'>
-          <h2><a href='/react-postgrest/App.js'>app source</a></h2>
-          <FetchTest title='normal'>
-                <Fetcher
-                    component={FetchData} 
-                    href={href}
-                    timeout={3000}
-                    loading={FetchLoad}
-                    timed_out={FetchTimedOut}
-                    errored_out={FetchError}
-                />
-          </FetchTest>
-          <FetchTest title='bad url'>
-                <Fetcher
-                    component={FetchData} 
-                    href={bad_href}
-                    loading={FetchLoad}
-                    timed_out={FetchTimedOut}
-                    errored_out={FetchError}
-                />
-          </FetchTest>
-          <FetchTest title='time out in 3 secs'>
-                <Fetcher
-                    component={FetchData} 
-                    href={href}
-                    timeout={3000}
-                    loading={FetchLoad}
-                    timed_out={FetchTimedOut}
-                    errored_out={FetchError}
-                    _simulate_lag={10000}
-                />
-           </FetchTest>
-           <FetchTest title='empty optional components'>
-                <Fetcher
-                    component={FetchData} 
-                    href={href}
-                    _simulate_lag={1000}
-                />
-           </FetchTest>
-        </div>
-    )}
-}
 
 ReactDOM.render(
-    <div>
-		<App />
+    <div className='demo-page'>
+        <MyDemo
+              title='Normal'
+              target={DemoFetcher}
+              props={{
+                  url: P.string(href),
+                  onFetched: P.callback.log(),
+                  _simulate_lag: P.number(1000),
+              }}
+        />
+        <MyDemo
+              title='Timed Out'
+              target={DemoFetcher}
+              props={{
+                  url: P.string(href),
+                  timeout: P.number(3000),
+                  _simulate_lag: P.number(10000),
+              }}
+          />
+        <MyDemo
+              title='Empty Optional Components'
+              target={DemoEmptyFetcher}
+              props={{
+                  url: P.string(href),
+                  onFetched: P.callback.log(),
+                  _simulate_lag: P.number(1000),
+              }}
+        />
+        <MyDemo
+              title='Fails'
+              target={DemoFetcher}
+              props={{
+                  url: P.string(bad_href),
+                  onError: P.callback.log(),
+                  _always_fail: P.bool(true),
+              }}
+        />
+        
+
+        <Highlight className='javascript'>{source}</Highlight>
     </div>
+
     , document.querySelector('#app')
 );
 

@@ -148,7 +148,6 @@ dist:
 docs:
 	rm -fr docs
 	cp -R public docs
-	cp src/App.js docs/
 	
 ###############################################################################
 # rules

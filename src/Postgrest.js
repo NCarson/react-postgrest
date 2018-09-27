@@ -1,1 +1,0 @@
-../../js-postgrest/src/Postgrest.js
