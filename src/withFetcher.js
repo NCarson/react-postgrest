@@ -5,7 +5,20 @@ import PropTypes from 'prop-types'
 import equal from 'fast-deep-equal'
 
 
-const withFetcher = (Success, Loading, Failed, TimedOut) => {
+function getDisplayName(WrappedComponent) {
+      return WrappedComponent.displayName || WrappedComponent.name || 'Component';
+}
+
+
+const withFetcher = (Success, config={}) => {
+    config.Loading = config.Loading || null // component to display while fetching
+    config.Failed = config.Failed || null // component to display on fetch failure
+    config.TimedOut= config.TimedOut || null // component to display after timeout timer is set
+    config.debug = config.debug || false  // output extra info
+    config.console = config.console || console // debugging console
+    config.always_fail = config.always_fail || false // alway render failed component
+    config.simulate_lag = config.simulate_lag || 0 // set a timeout to simulate network lag
+    config.singleton = config.singleton || false // return first element of fetched data array
 
     class WithFetcher extends React.Component {
 
@@ -13,25 +26,20 @@ const withFetcher = (Success, Loading, Failed, TimedOut) => {
 
             //req
             url: PropTypes.string.isRequired,
-            get: PropTypes.func.isRequired,
+            getFunc: PropTypes.func.isRequired,
 
             //default reqs
             timeout: PropTypes.number.isRequired,
-            _debug: PropTypes.bool.isRequired,
-            _always_fail: PropTypes.bool.isRequired,
 
             //optional
-            onFetched: PropTypes.function,
-            onFail: PropTypes.function,
             url_config: PropTypes.object,
-            _simulate_lag: PropTypes.number,
-
+            onFetched: PropTypes.func,
+            onFailed: PropTypes.func,
         }
 
         static defaultProps = {
             timeout: 0,
-            _debug: false,
-            _always_fail: false,
+
         }
 
         _initialState() {
@@ -40,23 +48,22 @@ const withFetcher = (Success, Loading, Failed, TimedOut) => {
               response: null,
               fetched: false, 
               timed_out: false,
-              has_error: this.props._always_fail || false,
+              has_error: config.always_fail || false,
             }
         }
 
         constructor(props) {
             super(props)
             this.state = this._initialState()
-            console.debug('state eq', this.state == this._initialState(), this.state === this._initialState())
         }
 
         componentDidMount() {
-            this.props._debug && console.log('withFetcher: mounted')
+            config.debug && config.console.log('withFetcher: mounted')
             this._fetch()
         }
 
         componentDidUpdate(newprops) {
-            this.props._debug && console.log('withFetcher: did update')
+            config.debug && config.console.log('withFetcher: did update')
             if (!this.props.url === newprops.url || !equal(this.props.url_config, newprops.url_config)) {
                 this.setState(this._initialState())
                 this._fetch()
@@ -64,11 +71,11 @@ const withFetcher = (Success, Loading, Failed, TimedOut) => {
         }
 
         _fetch() {
-            this.props._debug && console.log('withFetcher: fetch')
+            config.debug && config.console.log('withFetcher: fetch')
             if (this.props.timeout) {
                 // set the clock to timeout
                 setTimeout( () => { 
-                    this.props._debug && console.log('withFetcher: timed out')
+                    config.debug && config.console.log('withFetcher: timed out')
                     if (!this.state.fetched) {
                         this.setState(
                             {timed_out: true }
@@ -79,49 +86,64 @@ const withFetcher = (Success, Loading, Failed, TimedOut) => {
 
             const x = () => {
                 const config = this.props.url_config || {}
-                this.props.get(this.props.url, config)
+                this.props.getFunc(this.props.url, config)
                     .then(response => this._onFetched(response))
                     .catch(error => { 
-                        this.props._debug && console.log('withFetcher: caught error'), 
+                        config.debug && config.console.log('withFetcher: caught error'), 
                             this.setState({has_error:true, error:error})
-                        this.props.onError & this.props.onError(error)
+                        this.props.onFailed && this.props.onFailed(error)
                     })
             }
 
-            if (this.props._simulate_lag) 
-                setTimeout( () => {x()}, this.props._simulate_lag)
+            if (config.simulate_lag) 
+                setTimeout( () => {x()}, config.simulate_lag)
             else
                 x()
         }
 
         _onFetched(response) {
-            this.props._debug && console.log('withFetcher: onFetched')
+            config.debug && config.console.log('withFetcher: onFetched')
 
-            if (!response || !response.data) {
-                this.setState({ fetched : true })
-                return
-            }
+            const {data, ...pruned_response } = response
             this.setState({ 
-                data : response.data,
-                fetched : true
+                data : data,
+                response: pruned_response,
+                fetched : true,
             })
             this.props.onFetched && this.props.onFetched(response.data)
         }
 
         render() {
-            this.props._debug && console.log('withFetcher: render', 'fetched:', this.state.fetched)
+            config.debug && config.console.log('withFetcher: render', 'fetched:', this.state.fetched)
+
+            var data = this.state.data
+            if (config.singleton) {
+                if (data)
+                    data = data[0]
+            }
+
+            const {url, getFunc, timeout, onFetched, onFailed, //eslint-disable-line no-unused-vars
+                url_config, ...other_props } = this.props //eslint-disable-line no-unused-vars
 
             if (this.state.has_error)
-                return  Failed ? <Failed error={this.state.error} /> : null 
+                return  config.Failed ? <config.Failed error={this.state.error} {...other_props} /> : null 
             else if (this.state.timed_out)
-                return  TimedOut ? <TimedOut/> : null 
-            else if (!this.state.fetched)
-                return  Loading ? <Loading /> : null 
-            else
-                return <Success response={this.state.response} data={this.state.data} />
+                return  config.TimedOut ? <config.TimedOut {...other_props} />  : null 
+            else if (!this.state.fetched) {
+                return  config.Loading ? <config.Loading {...other_props} /> : null 
+            } else {
+                return (
+                    <Success 
+                        response={this.state.response} 
+                        data={data}
+                        {...other_props}
+                    />
+                )
+            }
         }
     }
 
+    WithFetcher.displayName = `WithFetcher(${getDisplayName(Success)})`;
     return  WithFetcher
 }
 

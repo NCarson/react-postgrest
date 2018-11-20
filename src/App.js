@@ -6,6 +6,8 @@ import { Card, CardBody, CardTitle} from 'reactstrap';
 //import { docco } from 'react-syntax-highlighter/styles/hljs';
 import Highlight from 'react-highlight'
 
+//https://stackoverflow.com/questions/17379891/how-to-require-text-files-with-browserify
+
 
 import Demo, {props as P} from 'react-demo'
 
@@ -79,7 +81,6 @@ const DemoEmptyFetcher = (props) => {return(
         {...props}
     />
 )}
-
 
 class MyDemo extends React.Component {
   constructor(props) {
