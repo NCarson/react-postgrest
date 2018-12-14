@@ -18,9 +18,6 @@ commit-doc:
 	git push
 
 publish:
-	#cd src && make clean
-	#cd src && PRODUCTION=1 make
-	#cd src && make docs
 	git add .
 	git commit
 	npm version patch

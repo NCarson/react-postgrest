@@ -2,7 +2,7 @@
   "name": "react-with-fetcher",
   "version": "0.1.3",
   "description": "HOC component to fetch network resources",
-  "main": "dist/fetcher.js",
+  "main": "dist/with-fetcher.js",
   "files": [
     "dist"
   ],
