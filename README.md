@@ -1,7 +1,7 @@
 
 ### HOC react component for fetching async network resources
 
-![bundlephobia](https://badgen.net/bundlephobia/minzip/react-witchFetcher)
+![bundlephobia](https://badgen.net/bundlephobia/minzip/react-with-fetcher)
 
 <img 
     alt='screenshot' 
