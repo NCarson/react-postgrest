@@ -8,5 +8,6 @@
     src='https://raw.githubusercontent.com/NCarson/react-withFetcher/master/.screen.png'
     width='400' />
 
-[Demo](https://ncarson.github.io/react-withFetcher/)
+[Demo](https://ncarson.github.io/react-withFetcher/) 
+
 [Api](https://ncarson.github.io/react-withFetcher/api/index.html)
