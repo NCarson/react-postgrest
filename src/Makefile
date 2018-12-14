@@ -16,24 +16,26 @@ BUNDLE_BASENAME := bundle
 CSS_BASENAME := main
 TARGET_DIR := $(BASE_DIR)/dist
 
-UMD_BASENAME := with-fetcher
 #XXX make sure to define ungzipped version along 
 #    with gzipped so `make clean` works correctly.
-BUNDLE_TARGET := \
-	$(TARGET_DIR)/$(BUNDLE_BASENAME).min.js \
-	$(TARGET_DIR)/$(BUNDLE_BASENAME).min.js.gz
-
-VENDOR_TARGET := \
-	$(TARGET_DIR)/$(VENDOR_BASENAME).min.js \
-	$(TARGET_DIR)/$(VENDOR_BASENAME).min.js.gz
-
+#BUNDLE_TARGET := \
+#	$(TARGET_DIR)/$(BUNDLE_BASENAME).min.js \
+#	$(TARGET_DIR)/$(BUNDLE_BASENAME).min.js.gz
+#
+#VENDOR_TARGET := \
+#	$(TARGET_DIR)/$(VENDOR_BASENAME).min.js \
+#	$(TARGET_DIR)/$(VENDOR_BASENAME).min.js.gz
+#
+#CSS_TARGET := \
+#	$(TARGET_DIR)/$(CSS_BASENAME).min.css \
+#	$(TARGET_DIR)/$(CSS_BASENAME).min.css.gz
+#
+UMD_BASENAME := with-fetcher
 UMD_TARGET := \
+	$(TARGET_DIR)/$(UMD_BASENAME).js \
+	$(TARGET_DIR)/$(UMD_BASENAME).js.gz \
 	$(TARGET_DIR)/$(UMD_BASENAME).min.js \
 	$(TARGET_DIR)/$(UMD_BASENAME).min.js.gz
-
-CSS_TARGET := \
-	$(TARGET_DIR)/$(CSS_BASENAME).min.css \
-	$(TARGET_DIR)/$(CSS_BASENAME).min.css.gz
 
 # XXX these are main targets to build
 # aka $(BUNDLE_BASENAME).js would build unminifed and un-gzipped

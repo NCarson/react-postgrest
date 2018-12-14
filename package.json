@@ -16,14 +16,14 @@
   "author": "NCarson",
   "license": "GPL-3.0-only",
   "dependencies": {
-    "fast-deep-equal": "^2.0.1",
-    "js-postgrest": "^0.1.0"
+    "fast-deep-equal": "^2.0.1"
   },
   "peerDependicies": {
     "react": ">=16.4.1",
     "react-dom": ">=16.4.1"
   },
   "devDependencies": {
+    "js-postgrest": "^0.1.0",
     "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.6",
