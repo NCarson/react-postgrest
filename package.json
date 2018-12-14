@@ -1,6 +1,6 @@
 {
   "name": "react-with-fetcher",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "HOC component to fetch network resources",
   "main": "dist/with-fetcher.js",
   "files": [
