@@ -5,8 +5,8 @@
 
 <img 
     alt='screenshot' 
-    src='https:https://ncarson.github.io/react-withFetcher/screen.pgn')
+    src='https://ncarson.github.io/react-withFetcher/screen.pgn'
     width='400' />
 
 [Demo](https://ncarson.github.io/react-withFetcher/)
-[Api](https://ncarson.github.io/react-withFetcher/)
+[Api](https://ncarson.github.io/react-withFetcher/api/index.html)
