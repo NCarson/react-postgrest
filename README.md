@@ -5,7 +5,7 @@
 
 <img 
     alt='screenshot' 
-    src='https://ncarson.github.io/react-withFetcher/screen.pgn'
+    src='https://raw.githubusercontent.com/NCarson/react-withFetcher/master/.screen.png'
     width='400' />
 
 [Demo](https://ncarson.github.io/react-withFetcher/)
