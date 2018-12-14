@@ -1,18 +1,23 @@
 {
-  "name": "makefile-node-template",
+  "name": "react-withFetcher",
   "version": "1.0.0",
-  "description": "Makefile to compile node.js incrementally",
-  "main": "dist/index.js",
+  "description": "HOC component to fetch network resources",
+  "main": "dist/fetcher.js",
   "files": [
     "dist"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ncarson/react-withFetcher.git"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "NCarson",
+  "license": "GPL-3.0-only",
   "dependencies": {
-    "fast-deep-equal": "^2.0.1"
+    "fast-deep-equal": "^2.0.1",
+    "js-postgrest": "^0.1.0"
   },
   "peerDependicies": {
     "react": ">=16.4.1",

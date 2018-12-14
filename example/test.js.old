@@ -1,0 +1,117 @@
+import React from 'react';
+import PropTypes from 'prop-types'
+
+import withFetcher from './withFetcher'
+import PGFetcher from './PostgrestFetcher'
+
+const Item = (props) => {return(
+    <li>{props.i}</li>
+)}
+Item.propTypes = {
+        i: PropTypes.number.isRequired,
+}
+
+const FetchSuccess = (props) => {return(
+    <div>
+        <h3>loaded .... :)</h3>
+        <ul>
+            { props.data.map(item => {
+                item.key=item.i; 
+                return React.createElement(Item, item)}
+            )}
+        </ul>
+    </div>
+)}
+
+FetchSuccess.propTypes = { data: PropTypes.object.isRequired, }
+
+const FetchLoading = () => {return(
+    <div>
+        <h3>loading .... :|</h3>
+    </div>
+)}
+
+const FetchTimedOut = () => {return(
+    <div>
+        <h3>data server timed out :/</h3>
+    </div>
+)}
+
+const FetchFailed = (props) => {return(
+    <div>
+        <h3>failed! {props.error.status} :(</h3>
+    </div>
+)}
+FetchFailed.propTypes = { 
+    error: PropTypes.string.isRequired,
+}
+
+const FetchTest = (props) => {return(
+    <div 
+        className='fetch-test'
+        style={{border: '2px solid blue', padding: '1em', display:'inline-block', margin: '1em', verticalAlign:'top'}}
+    >
+        <h2
+            style={{color: 'blue', padding:'1em'}}
+        >
+            {props.title}
+        </h2>
+        {props.children}
+    </div>
+)}
+FetchTest.propTypes = { 
+    title: PropTypes.string.isRequired, 
+    children: PropTypes.array.isRequired, 
+}
+
+const Fetcher = withFetcher(FetchSuccess, FetchLoading, FetchFailed, FetchTimedOut)
+const FetchEmpty = withFetcher(FetchSuccess)
+const get = new PGFetcher().get
+
+const host = 'https://postgrest-test.chessindex.org'
+const href = host + '/testing?limit=5'
+const bad_href = host + '/not_exist'
+
+export const TestNormal = () => {return(
+      <FetchTest title='normal'>
+            <Fetcher
+                url={href}
+                get={get}
+                timeout={3000}
+                _simulate_lag={1000}
+            />
+      </FetchTest>
+)}
+
+export const TestFail = () => {return(
+    <FetchTest title='bad url'>
+        <Fetcher
+            url={bad_href}
+            get={get}
+            _simulate_lag={1000}
+        />
+    </FetchTest>
+)}
+
+export const TestTimeOut = () => {return(
+    <FetchTest title='time out in 3 secs'>
+        <Fetcher
+            url={href}
+            get={get}
+            timeout={3000}
+            _simulate_lag={10000}
+        />
+    </FetchTest>
+)}
+
+export const TestEmpty= () => {return(
+    <FetchTest title='empty optional components'>
+        <FetchEmpty
+            url={href}
+            get={get}
+            _simulate_lag={1000}
+        />
+    </FetchTest>
+)}
+
+
