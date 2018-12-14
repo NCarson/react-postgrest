@@ -22,6 +22,7 @@ publish:
 	#cd src && PRODUCTION=1 make
 	#cd src && make docs
 	git add .
+	git commit
 	npm version patch
 	git push --tags
 	npm publish

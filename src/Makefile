@@ -14,7 +14,7 @@ BASE_DIR := ..
 VENDOR_BASENAME := vendor
 BUNDLE_BASENAME := bundle
 CSS_BASENAME := main
-TARGET_DIR := $(BASE_DIR)/public/dist
+TARGET_DIR := $(BASE_DIR)/dist
 
 UMD_BASENAME := with-fetcher
 #XXX make sure to define ungzipped version along 
